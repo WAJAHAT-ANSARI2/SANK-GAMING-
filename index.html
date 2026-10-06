@@ -45,8 +45,8 @@ canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 .pill{font-family:Orbitron;font-size:.6rem;letter-spacing:1px;padding:.35rem .9rem;border:1px solid #2a1a55;border-radius:99px;color:#6655aa;cursor:pointer;transition:.2s}
 .pill:hover{border-color:var(--purple);color:var(--purple)}
 /* ORBIT */
-.orbit-box{display:flex;justify-content:center}
-.stage{position:relative;width:530px;height:490px;flex-shrink:0}
+.orbit-box{display:block;overflow:hidden;width:100%;min-width:0}
+.stage{position:relative;width:530px;height:490px;transform-origin:top left}
 .stage svg{position:absolute;inset:0;width:100%;height:100%}
 .oc{position:absolute;width:90px;height:120px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.15);box-shadow:0 6px 20px rgba(0,0,0,.6)}
 .oc img{width:100%;height:100%;object-fit:cover;display:block}
@@ -102,8 +102,32 @@ canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 .pay b{display:block;margin-bottom:.3rem}.pay .num{display:block;font-family:Orbitron;font-size:1.1rem}.pay small{color:var(--muted);font-size:.85rem}
 footer{position:relative;z-index:1;text-align:center;padding:2rem;border-top:1px solid #1a0033;color:#445566;font-size:.85rem}
 footer b{display:block;font-family:Orbitron;margin-bottom:.4rem;background:linear-gradient(135deg,var(--pink),var(--purple),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-@media(max-width:900px){.hero{grid-template-columns:1fr}.orbit-box{height:360px;overflow:hidden}.stage{transform:scale(.7);transform-origin:top center}.why{grid-template-columns:1fr 1fr}.cgrid,.pay{grid-template-columns:1fr}.nav{padding:.8rem 1rem}}
-@media(max-width:560px){.why{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr);gap:.8rem}.card .im{height:210px}}
+.hero>div{min-width:0}
+@media(min-width:1600px){body{font-size:18px}.hero{max-width:1500px}.wrap{max-width:1400px}}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;min-height:0;padding:1.5rem 1rem;gap:1.5rem}
+  .hbtns,.stats,.pills{max-width:100%}
+  .why{grid-template-columns:1fr 1fr}
+  .cgrid,.pay{grid-template-columns:1fr}
+  .wrap{padding:2rem 1rem}
+  .nav{padding:.8rem 1rem}
+}
+@media(max-width:600px){
+  .nav{padding:.7rem .8rem}.brand{font-size:1rem}.nav nav{gap:.9rem}.nav nav a{font-size:.9rem}
+  .page{padding-top:62px}
+  .sh{gap:.6rem}.sh h2{font-size:.85rem;white-space:normal;text-align:center}
+  .why{grid-template-columns:1fr}
+  .grid{grid-template-columns:repeat(2,1fr);gap:.7rem}
+  .card .im{height:190px}.card .bd{padding:.7rem}
+  .card h3{font-size:.78rem}.card p{font-size:.8rem}.card .g{font-size:.72rem}
+  .card .row{flex-direction:column;align-items:flex-start;gap:.3rem}
+  .card .plat,.card .ty{font-size:.58rem;padding:.1rem .35rem}
+  .filters{gap:.6rem}.filters select{flex:1 1 45%}
+  .box{padding:1.2rem}.pay .num{font-size:.95rem}
+  .eyebrow{font-size:.6rem;letter-spacing:3px}
+  .btn{padding:.75rem 1rem;font-size:.7rem}
+}
+@media(max-width:360px){.brand{font-size:.85rem}.nav nav{gap:.6rem}.nav nav a{font-size:.8rem}.grid{gap:.5rem}.card .im{height:160px}}
 </style>
 </head>
 <body>
@@ -244,7 +268,6 @@ const IMG={
    NAYI CD: koi bhi ek { ... }, line copy karke paste karein aur badal dein.
    ====================================================================== */
 const CDS = [
-  { img:"images/p1.jpg", name:"Red Dead Redemption 2", title:"Cowboy ki open world kahani", platform:"PS4", genre:"Action", price:99, available:true },
   { img:IMG.p1, name:"Assassin's Creed Valhalla", title:"Viking ban kar England par hamla karo",  platform:"PS5", genre:"Action",    price:150, available:true  },
   { img:IMG.p2, name:"Spider-Man: Miles Morales", title:"New York ka naya Spider-Man",             platform:"PS5", genre:"Action",    price:150, available:true  },
   { img:IMG.p3, name:"Demon's Souls",             title:"Mushkil aur dark fantasy RPG",            platform:"PS5", genre:"RPG",       price:150, available:false },
@@ -329,13 +352,23 @@ document.querySelectorAll('.soc').forEach(a=>{
   a.onmouseleave=()=>a.style.borderColor='';
 });
 
+/* ---------- ORBIT FIT (screen ke hisab se size) ---------- */
+function fitOrbit(){
+  const b=document.querySelector('.orbit-box'), w=b.clientWidth; if(!w) return;
+  const k=Math.min(1,w/530);
+  stage.style.transform=`scale(${k})`;
+  stage.style.marginLeft=Math.max(0,(w-530*k)/2)+'px';
+  b.style.height=(490*k)+'px';
+}
+addEventListener('resize',fitOrbit);
+
 /* ---------- PAGE SWITCH ---------- */
 function go(p){
   if(!document.getElementById(p)) p='home';
   document.querySelectorAll('.page').forEach(s=>s.classList.toggle('show',s.id===p));
   document.querySelectorAll('.nav nav a').forEach(a=>a.classList.toggle('on',a.dataset.p===p));
   try{ history.replaceState(null,'','#'+p); }catch(e){}
-  scrollTo(0,0);
+  scrollTo(0,0); fitOrbit();
 }
 document.addEventListener('click',e=>{
   const a=e.target.closest('a[href^="#"]');
