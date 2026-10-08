@@ -178,7 +178,7 @@ footer b{display:block;font-family:Orbitron;margin-bottom:.4rem;background:linea
   <div class="wrap">
     <div class="sh"><i></i><h2>⚡ WHY SANK GAMING</h2><i></i></div>
     <div class="why">
-      <div><span class="i">💰</span><span><h4>Lowest Prices</h4><p>Top games from Rs. 99/day</p></span></div>
+      <div><span class="i">💰</span><span><h4>Lowest Prices</h4><p>Top games from Rs. 99/week</p></span></div>
       <div><span class="i">🎮</span><span><h4>Huge Collection</h4><p>PS5, PS4, Xbox — all platforms</p></span></div>
       <div><span class="i">🛵</span><span><h4>Home Delivery</h4><p>CD delivered to your doorstep</p></span></div>
       <div><span class="i">💾</span><span><h4>Digital Games</h4><p>Primary & Secondary slots</p></span></div>
@@ -266,7 +266,7 @@ const IMG={
    title:     chhoti si line
    platform:  "PS5" ya "PS4"
    genre:     Action / Sports / Shooter / RPG / Adventure
-   price:     Rs per day
+   price:     Rs per WEEK
    available: true = Available  |  false = Booked      (DISC CD ke liye)
    DIGITAL game ke liye:  type:"digital"  aur  slots:[true,false]
        slots me pehli value = Slot 1, doosri = Slot 2
@@ -307,7 +307,7 @@ function render(){
         <h3>${c.name}</h3>
         <p>${c.title}</p>
         <div class="row">
-          <div class="price">Rs. ${c.price}<small>/day</small></div>
+          <div class="price">Rs. ${c.price}<small>/week</small></div>
           ${isDigital(c)
             ? `<div class="slots">${c.slots.map((v,i)=>`<div>Slot ${i+1}: ${v ? '<span class="yes">✓ Available</span>' : '<span class="no">✗ Booked</span>'}</div>`).join('')}</div>`
             : `<div>${c.available ? '<span class="yes">✓ Available</span>' : '<span class="no">✗ Booked</span>'}</div>`}
