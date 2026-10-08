@@ -84,6 +84,8 @@ canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 .card .row{display:flex;justify-content:space-between;align-items:center}
 .price{color:var(--purple);font-weight:700;font-size:1.1rem}.price small{color:var(--muted);font-size:.75rem}
 .yes{color:#22c55e;font-weight:700}.no{color:#ef4444;font-weight:700}
+.card .ty.dg{background:rgba(236,72,153,.2);border-color:#ec4899;color:#ec4899}
+.slots{text-align:right;font-size:.85rem;line-height:1.5;color:var(--muted)}
 .none{display:none;text-align:center;color:var(--muted);padding:3rem}
 /* CONTACT */
 .ct{font-size:clamp(1.5rem,5vw,3rem);margin-bottom:.8rem;background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -149,7 +151,7 @@ footer b{display:block;font-family:Orbitron;margin-bottom:.4rem;background:linea
       <div class="eyebrow">— PREMIUM DISC RENTAL</div>
       <h1 class="title"><span class="a">SANK</span><span class="b">GAMING</span></h1>
       <div class="zone">GAMING ZONE</div>
-      <p class="desc">Karachi ka <strong>sabse bara sank</strong> disc hub.<br>PS5 · PS4 · Blu-ray — ek jaga.<br>Rent karo, khelo, jito! 🎮</p>
+      <p class="desc">Karachi ka <strong>sabse sank</strong> disc hub.<br>PS5 · PS4 · Blu-ray — ek jagah.<br>Rent karo, khelo, jito! 🎮</p>
       <div class="hbtns">
         <a class="btn btn-p" href="https://wa.me/923212115181" target="_blank">⚡ RENT NOW</a>
         <a class="btn btn-s" href="#browse">BROWSE COLLECTION</a>
@@ -200,6 +202,7 @@ footer b{display:block;font-family:Orbitron;margin-bottom:.4rem;background:linea
       <select id="fp"><option value="">🎮 All Platforms</option><option>PS5</option><option>PS4</option></select>
       <select id="fg"><option value="">All Genres</option><option>Action</option><option>Sports</option><option>Shooter</option><option>RPG</option><option>Adventure</option></select>
       <select id="fa"><option value="">All Status</option><option value="yes">✓ Available</option><option value="no">✗ Booked</option></select>
+      <select id="fy"><option value="">💿💾 All Types</option><option value="disc">💿 Disc Only</option><option value="digital">💾 Digital Only</option></select>
     </div>
     <div class="grid" id="grid"></div>
     <div class="none" id="none">No games found matching your search.</div>
@@ -216,7 +219,7 @@ footer b{display:block;font-family:Orbitron;margin-bottom:.4rem;background:linea
     <div class="cgrid">
       <div class="box">
         <h2 class="bh" style="color:var(--purple)">🎮 About SANK GAMING</h2>
-        <p style="color:var(--muted);line-height:1.8;margin:0">SANK GAMING Pakistan ka ek trusted CD aur Digital Game rental store hai. Hum PS4, PS5, Xbox aur digital games rent pe dete hain — lowest prices pe, ghar tak delivery ke saath. Hamara maqsad hai ke gaming sab ke liye accessible ho.</p>
+        <p style="color:var(--muted);line-height:1.8;margin:0">SANK GAMING Pakistan ka ek trusted CD aur Digital Game rental store hai. Hum PS4, PS5, Xbox aur PC games rent pe dete hain — lowest prices pe, ghar tak delivery ke saath. Hamara maqsad hai ke gaming sab ke liye accessible ho.</p>
         <div class="info">
           <p>📍 Location: Karachi, Pakistan</p>
           <p>⏰ Hours: 10am – 10pm (Daily)</p>
@@ -264,7 +267,11 @@ const IMG={
    platform:  "PS5" ya "PS4"
    genre:     Action / Sports / Shooter / RPG / Adventure
    price:     Rs per day
-   available: true = Available  |  false = Booked
+   available: true = Available  |  false = Booked      (DISC CD ke liye)
+   DIGITAL game ke liye:  type:"digital"  aur  slots:[true,false]
+       slots me pehli value = Slot 1, doosri = Slot 2
+       true = Available  |  false = Booked
+       (digital me "available:" nahi likhna, sirf "slots:" likhna hai)
    NAYI CD: koi bhi ek { ... }, line copy karke paste karein aur badal dein.
    ====================================================================== */
 const CDS = [
@@ -275,34 +282,40 @@ const CDS = [
   { img:IMG.p5, name:"COD Modern Warfare III",    title:"Jang wala shooting game, online bhi",     platform:"PS5", genre:"Shooter",   price:150, available:true  },
   { img:IMG.p6, name:"FIFA 23",                   title:"Football ka sab se mashhoor game",        platform:"PS5", genre:"Sports",    price:99,  available:true  },
   { img:IMG.p7, name:"GTA V",                     title:"Open world action, Los Santos ki sair",   platform:"PS4", genre:"Action",    price:99,  available:false },
-  { img:IMG.p8, name:"Ghost of Yotei",            title:"Samurai action adventure",                platform:"PS5", genre:"Action",    price:150, available:true  }
+  { img:IMG.p8, name:"Ghost of Yotei",            title:"Samurai action adventure",                platform:"PS5", genre:"Action",    price:150, available:true  },
+  { img:IMG.p6, type:"digital", name:"FIFA 23 (Digital)",         title:"Digital version, 2 slots hain",           platform:"PS5", genre:"Sports",    price:99,  slots:[true,false] }
 ];
 
 /* ---------- BROWSE ---------- */
 const $ = id => document.getElementById(id);
+const isDigital = c => c.type==='digital';
+const isAvail = c => isDigital(c) ? c.slots.some(Boolean) : c.available;
 function render(){
-  const q=$('q').value.toLowerCase().trim(), p=$('fp').value, g=$('fg').value, a=$('fa').value;
+  const q=$('q').value.toLowerCase().trim(), p=$('fp').value, g=$('fg').value, a=$('fa').value, y=$('fy').value;
   const list=CDS.filter(c =>
     (!q || (c.name+' '+c.title).toLowerCase().includes(q)) &&
     (!p || c.platform===p) && (!g || c.genre===g) &&
-    (!a || (a==='yes')===c.available));
+    (!a || (a==='yes')===isAvail(c)) &&
+    (!y || (y==='digital')===isDigital(c)));
   $('none').style.display = list.length ? 'none':'block';
   $('grid').innerHTML = list.map(c=>`
     <div class="card">
       <div class="im"><img src="${c.img}" alt="${c.name}" loading="lazy">
-        <div class="plat">${c.platform}</div><div class="ty">💿 Disc</div></div>
+        <div class="plat">${c.platform}</div>${isDigital(c) ? '<div class="ty dg">💾 Digital</div>' : '<div class="ty">💿 Disc</div>'}</div>
       <div class="bd">
         <div class="g">${c.genre}</div>
         <h3>${c.name}</h3>
         <p>${c.title}</p>
         <div class="row">
           <div class="price">Rs. ${c.price}<small>/day</small></div>
-          <div>${c.available ? '<span class="yes">✓ Available</span>' : '<span class="no">✗ Booked</span>'}</div>
+          ${isDigital(c)
+            ? `<div class="slots">${c.slots.map((v,i)=>`<div>Slot ${i+1}: ${v ? '<span class="yes">✓ Available</span>' : '<span class="no">✗ Booked</span>'}</div>`).join('')}</div>`
+            : `<div>${c.available ? '<span class="yes">✓ Available</span>' : '<span class="no">✗ Booked</span>'}</div>`}
         </div>
       </div>
     </div>`).join('');
 }
-['q','fp','fg','fa'].forEach(i => $(i).addEventListener('input', render));
+['q','fp','fg','fa','fy'].forEach(i => $(i).addEventListener('input', render));
 render();
 
 /* ---------- HOME pills ---------- */
