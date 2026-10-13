@@ -86,6 +86,7 @@ canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 .yes{color:#22c55e;font-weight:700}.no{color:#ef4444;font-weight:700}
 .card .ty.dg{background:rgba(236,72,153,.2);border-color:#ec4899;color:#ec4899}
 .slots{text-align:right;font-size:.85rem;line-height:1.5;color:var(--muted)}
+.noimg{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:2.5rem;background:linear-gradient(135deg,#1a0028,#060008)}.noimg small{font-size:.7rem;color:var(--muted);margin-top:.4rem}
 .none{display:none;text-align:center;color:var(--muted);padding:3rem}
 /* CONTACT */
 .ct{font-size:clamp(1.5rem,5vw,3rem);margin-bottom:.8rem;background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -200,7 +201,7 @@ footer b{display:block;font-family:Orbitron;margin-bottom:.4rem;background:linea
     <div class="filters">
       <input id="q" type="text" placeholder="Search by title... (FIFA, GTA, Spider-Man)" autocomplete="off">
       <select id="fp"><option value="">🎮 All Platforms</option><option>PS5</option><option>PS4</option></select>
-      <select id="fg"><option value="">All Genres</option><option>Action</option><option>Sports</option><option>Shooter</option><option>RPG</option><option>Adventure</option></select>
+      <select id="fg"><option value="">All Genres</option><option>Action</option><option>Sports</option><option>Shooter</option><option>RPG</option><option>Adventure</option><option>Racing</option><option>Fighting</option><option>Horror</option></select>
       <select id="fa"><option value="">All Status</option><option value="yes">✓ Available</option><option value="no">✗ Booked</option></select>
       <select id="fy"><option value="">💿💾 All Types</option><option value="disc">💿 Disc Only</option><option value="digital">💾 Digital Only</option></select>
     </div>
@@ -261,7 +262,8 @@ const IMG={
 <script>
 /* ======================================================================
    CDs LIST — YAHAN SE MANUALLY EDIT KAREIN
-   img:       IMG.p1 ... IMG.p8 (file me embedded) YA koi link jaise "https://...jpg"
+   img:       "images/NAAM.png"  (images folder me picture ka naam)
+   title:     (optional) chhoti line, na likhein to card me nahi aayegi
    name:      CD ka naam
    title:     chhoti si line
    platform:  "PS5" ya "PS4"
@@ -275,12 +277,93 @@ const IMG={
    NAYI CD: koi bhi ek { ... }, line copy karke paste karein aur badal dein.
    ====================================================================== */
 const CDS = [
-  { img:"images/APT.png", name:"A Plauge Tale", title:"Viking ban kar England par hamla karo",  platform:"PS5", genre:"Action",    price:150, available:true  },
-  
+  { img:"images/AC.png", name:"Cricket 26 (Ashes)", platform:"PS5", genre:"Sports", price:150, available:true },
+  { img:"images/ACO.png", name:"Assassin's Creed Origins", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/ACOY.png", name:"Assassin's Creed Odyssey", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/ACV.png", name:"Assassin's Creed Valhalla", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/APT.png", name:"A Plague Tale: Innocence", platform:"PS5", genre:"Adventure", price:150, available:true },
+  { img:"images/AWB.png", name:"Alan Wake Remastered", platform:"PS5", genre:"Horror", price:150, available:true },
+  { img:"images/BAK.png", name:"Batman: Arkham Knight", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/C19.png", name:"Cricket 19", platform:"PS5", genre:"Sports", price:150, available:true },
+  { img:"images/C22.png", name:"Cricket 22", platform:"PS5", genre:"Sports", price:150, available:true },
+  { img:"images/CODBOCW.png", name:"COD Black Ops Cold War", platform:"PS5", genre:"Shooter", price:150, available:true },
+  { img:"images/CODMW.png", name:"COD Modern Warfare", platform:"PS5", genre:"Shooter", price:150, available:true },
+  { img:"images/CODV.png", name:"COD Vanguard", platform:"PS5", genre:"Shooter", price:150, available:true },
+  { img:"images/CODW2.png", name:"COD Modern Warfare II", platform:"PS5", genre:"Shooter", price:150, available:true },
+  { img:"images/CRT.png", name:"Crysis Remastered Trilogy", platform:"PS5", genre:"Shooter", price:150, available:true },
+  { img:"images/D.png", name:"Doom: The Dark Ages", platform:"PS5", genre:"Shooter", price:150, available:true },
+  { img:"images/D2.png", name:"Dishonored 2", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/DBZK.png", name:"Dragon Ball Z: Kakarot", platform:"PS5", genre:"RPG", price:150, available:true },
+  { img:"images/DG.png", name:"Days Gone", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/DL.png", name:"Deathloop", platform:"PS5", genre:"Shooter", price:150, available:true },
+  { img:"images/DL2SH.png", name:"Dying Light 2 Stay Human", platform:"PS5", genre:"Horror", price:150, available:true },
+  { img:"images/DS.png", name:"Dead Space", platform:"PS5", genre:"Horror", price:150, available:true },
+  { img:"images/ER.png", name:"Elden Ring", platform:"PS5", genre:"RPG", price:150, available:true },
+  { img:"images/F22.png", name:"FIFA 22", platform:"PS5", genre:"Sports", price:150, available:true },
+  { img:"images/FC6.png", name:"Far Cry 6", platform:"PS5", genre:"Shooter", price:150, available:true },
+  { img:"images/FCND.png", name:"Far Cry New Dawn", platform:"PS5", genre:"Shooter", price:150, available:true },
+  { img:"images/FS.png", name:"Forspoken", platform:"PS5", genre:"RPG", price:150, available:true },
+  { img:"images/GOT.png", name:"Ghost of Tsushima", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/GOTG.png", name:"Marvel's Guardians of the Galaxy", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/GOW.png", name:"God of War", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/GOWR.png", name:"God of War Ragnarök", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/GT.png", name:"Ghostwire: Tokyo", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/H2.png", name:"Hitman 2", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/HFW.png", name:"Horizon Forbidden West", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/HL.png", name:"Hogwarts Legacy", platform:"PS5", genre:"RPG", price:150, available:true },
+  { img:"images/JFO.png", name:"Star Wars Jedi: Fallen Order", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/KBOS.png", name:"Kena: Bridge of Spirits", platform:"PS5", genre:"Adventure", price:150, available:true },
+  { img:"images/MA.png", name:"Marvel's Avengers", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/MK.png", name:"Mortal Kombat 1", platform:"PS5", genre:"Fighting", price:150, available:true },
+  { img:"images/MSM.png", name:"Marvel's Spider-Man", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/MT.png", name:"Mafia Trilogy", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/NFSH.png", name:"Need for Speed Heat", platform:"PS5", genre:"Racing", price:150, available:true },
+  { img:"images/NFSP.png", name:"Need for Speed Payback", platform:"PS5", genre:"Racing", price:150, available:true },
+  { img:"images/NSUNST.png", name:"Naruto Shippuden: Ultimate Ninja Storm Trilogy", platform:"PS5", genre:"Fighting", price:150, available:true },
+  { img:"images/OT.png", name:"Outlast Trinity", platform:"PS5", genre:"Horror", price:150, available:true },
+  { img:"images/p1.png", name:"Cricket 26", platform:"PS5", genre:"Sports", price:150, available:true },
+  { img:"images/PTR.png", name:"A Plague Tale: Requiem", platform:"PS5", genre:"Adventure", price:150, available:true },
+  { img:"images/R2.png", name:"Rage 2", platform:"PS5", genre:"Shooter", price:150, available:true },
+  { img:"images/RAC.png", name:"Ratchet & Clank", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/RACRA.png", name:"Ratchet & Clank: Rift Apart", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/RE2.png", name:"Resident Evil 2", platform:"PS5", genre:"Horror", price:150, available:true },
+  { img:"images/RE3.png", name:"Resident Evil 3", platform:"PS5", genre:"Horror", price:150, available:true },
+  { img:"images/RE4.png", name:"Resident Evil 4", platform:"PS5", genre:"Horror", price:150, available:true },
+  { img:"images/REV.png", name:"Resident Evil Village", platform:"PS5", genre:"Horror", price:150, available:true },
+  { img:"images/ROTR.png", name:"Rise of the Ronin", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/S.png", name:"Sifu", platform:"PS5", genre:"Fighting", price:150, available:true },
+  { img:"images/SMMM.png", name:"Spider-Man: Miles Morales", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/SOTTR.png", name:"Shadow of the Tomb Raider", platform:"PS5", genre:"Adventure", price:150, available:true },
+  { img:"images/SR.png", name:"Saints Row", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/T.png", name:"Thief", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/T7.png", name:"Tekken 7", platform:"PS5", genre:"Fighting", price:150, available:true },
+  { img:"images/TDPAHOA.png", name:"The Dark Pictures: House of Ashes", platform:"PS5", genre:"Horror", price:150, available:true },
+  { img:"images/TLOU1.png", name:"The Last of Us Part I", platform:"PS5", genre:"Adventure", price:150, available:true },
+  { img:"images/TLOU2.png", name:"The Last of Us Part II", platform:"PS5", genre:"Adventure", price:150, available:true },
+  { img:"images/TLOUR.png", name:"The Last of Us Part II Remastered", platform:"PS5", genre:"Adventure", price:150, available:true },
+  { img:"images/TQ.png", name:"The Quarry", platform:"PS5", genre:"Horror", price:150, available:true },
+  { img:"images/TR.png", name:"Tomb Raider: Legacy of Atlantis", platform:"PS5", genre:"Adventure", price:150, available:true },
+  { img:"images/TW3WH.png", name:"The Witcher 3: Wild Hunt", platform:"PS5", genre:"RPG", price:150, available:true },
+  { img:"images/UTLL.png", name:"Uncharted: Legacy of Thieves", platform:"PS5", genre:"Adventure", price:150, available:true },
+  { img:"images/UTNDC.png", name:"Uncharted: Nathan Drake Collection", platform:"PS5", genre:"Adventure", price:150, available:true },
+  { img:"images/WDL.png", name:"Watch Dogs: Legion", platform:"PS5", genre:"Action", price:150, available:true },
+  { img:"images/WWE2K23.png", name:"WWE 2K23", platform:"PS5", genre:"Sports", price:150, available:true }
 ];
 
 /* ---------- BROWSE ---------- */
 const $ = id => document.getElementById(id);
+/* Picture na mile to khud dusre extension (jpg/jpeg/webp) aur chhote/bade letters try karta hai */
+function imgFail(el){
+  if(!el._t){
+    const b=el.dataset.b, k=b.lastIndexOf('/')+1, dir=b.slice(0,k), f=b.slice(k);
+    el._t=[]; el._i=0;
+    [f,f.toLowerCase(),f.toUpperCase()].forEach(n=>['png','jpg','jpeg','webp'].forEach(e=>{
+      const u=dir+n+'.'+e; if(!el._t.includes(u)) el._t.push(u);
+    }));
+  }
+  if(el._i<el._t.length) el.src=el._t[el._i++];
+  else{ el.onerror=null; el.outerHTML='<div class="noimg">🎮<small>Picture nahi mili</small></div>'; }
+}
 const isDigital = c => c.type==='digital';
 const isAvail = c => isDigital(c) ? c.slots.some(Boolean) : c.available;
 function render(){
@@ -293,12 +376,12 @@ function render(){
   $('none').style.display = list.length ? 'none':'block';
   $('grid').innerHTML = list.map(c=>`
     <div class="card">
-      <div class="im"><img src="${c.img}" alt="${c.name}" loading="lazy">
+      <div class="im"><img src="${c.img}" ${c.img.startsWith('data:') ? '' : `data-b="${c.img.replace(/\.\w+$/,'')}" onerror="imgFail(this)"`} alt="${c.name}" loading="lazy">
         <div class="plat">${c.platform}</div>${isDigital(c) ? '<div class="ty dg">💾 Digital</div>' : '<div class="ty">💿 Disc</div>'}</div>
       <div class="bd">
         <div class="g">${c.genre}</div>
         <h3>${c.name}</h3>
-        <p>${c.title}</p>
+        ${c.title ? `<p>${c.title}</p>` : ''}
         <div class="row">
           <div class="price">Rs. ${c.price}<small>/week</small></div>
           ${isDigital(c)
@@ -323,8 +406,8 @@ $('pills').addEventListener('click', e=>{
 });
 
 /* ---------- ORBIT ---------- */
-const stage=$('stage'), cards=CDS.map(c=>{
-  const d=document.createElement('div'); d.className='oc'; d.innerHTML=`<img src="${c.img}" alt="${c.name}" draggable="false">`;
+const stage=$('stage'), cards=Object.values(IMG).map(src=>{
+  const d=document.createElement('div'); d.className='oc'; d.innerHTML=`<img src="${src}" alt="" draggable="false">`;
   stage.appendChild(d); return d;});
 const RINGS=[{idx:[0,1,2,3],rx:148,ry:94,spd:.007},{idx:[4,5,6,7],rx:212,ry:136,spd:-.005}];
 let tick=0;
